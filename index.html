@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚡ AI Compute Cost Dashboard Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #8b5cf6;
+      --primary-dark: #7c3aed;
+      --secondary: #4f46e5;
+      --accent: #ec4899;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --dark: #0f172a;
+      --bg-light: #ffffff;
+      --bg-dark: #0e0e1c;
+      --bg-card-dark: #1e1e3f;
+      --text-light: #111827;
+      --text-dark: #e5e7eb;
+      --font: 'Inter', sans-serif;
+      
+      --card-border-radius: 14px;
+      --button-border-radius: 10px;
+      --animation-timing: 0.25s ease-in-out;
+    }
+    
+    [data-theme="dark"] {
+      --bg-light: var(--bg-dark);
+      --text-light: var(--text-dark);
+      color-scheme: dark;
+    }
+    
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+      color: white;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    header h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+      position: relative;
+    }
+    
+    header h1:after {
+      content: "Pro";
+      position: absolute;
+      top: -10px;
+      right: -40px;
+      background: var(--accent);
+      color: white;
+      font-size: 0.8rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transform: rotate(15deg);
+    }
+    
+    header p {
+      font-size: 1.125rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .theme-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.2s;
+    }
+    
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    
+    .actions {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .actions button {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      padding: 0.7rem 1.2rem;
+      font-weight: 600;
+      border-radius: var(--button-border-radius);
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      backdrop-filter: blur(5px);
+      transition: all var(--animation-timing);
+    }
+    
+    .actions button:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+    }
+    
+    .actions button i {
+      font-size: 1rem;
+    }
+    
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: -2rem auto 0;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .card {
+      background: white;
+      border-radius: var(--card-border-radius);
+      padding: 2rem 1.5rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+      text-align: center;
+      transition: all var(--animation-timing);
+      border: 1px solid var(--gray-100);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    [data-theme="dark"] .card {
+      background: var(--bg-card-dark);
+      border-color: rgba(255,255,255,0.05);
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+    
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+    
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      color: white;
+      font-size: 1.5rem;
+    }
+    
+    .card h2 { 
+      font-size: 2.4rem; 
+      margin: 0.5rem 0; 
+      font-weight: 800; 
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .card small { 
+      color: var(--gray-500); 
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .card-purple .card-icon { background: var(--primary); }
+    .card-blue .card-icon { background: var(--secondary); }
+    .card-green .card-icon { background: var(--success); }
+    .card-orange .card-icon { background: var(--warning); }
+    
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    
+    .content-wrapper {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 2rem;
+    }
+    
+    @media (max-width: 1024px) {
+      .content-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .input-group {
+      background: white;
+      border-radius: var(--card-border-radius);
+      box-shadow: 0 3px 14px rgba(0,0,0,0.05);
+      padding: 2.25rem 2rem;
+      animation: fade 0.6s ease-in;
+      height: fit-content;
+      border: 1px solid var(--gray-100);
+    }
+    
+    [data-theme="dark"] .input-group {
+      background: var(--bg-card-dark);
+      border-color: rgba(255,255,255,0.05);
+    }
+    
+    .input-group h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--gray-900);
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+    
+    [data-theme="dark"] .input-group h2 {
+      color: white;
+    }
+    
+    .input-group h2::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+    
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+      color: var(--gray-700);
+    }
+    
+    [data-theme="dark"] label {
+      color: var(--gray-300);
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      margin-top: 0.4rem;
+      font-size: 1rem;
+      border-radius: var(--button-border-radius);
+      border: 1px solid var(--gray-300);
+      background: var(--gray-50);
+      color: var(--gray-800);
+      transition: all 0.2s;
+    }
+    
+    [data-theme="dark"] input, 
+    [data-theme="dark"] select, 
+    [data-theme="dark"] textarea {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
+      color: white;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+    
+    button.action {
+      margin-top: 1.75rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.9rem 1.5rem;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: var(--button-border-radius);
+      cursor: pointer;
+      width: 100%;
+      transition: all var(--animation-timing);
+      font-weight: 600;
+    }
+    
+    button.action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 1.5rem;
+      background: var(--gray-100);
+      border-radius: var(--button-border-radius);
+      padding: 0.4rem;
+    }
+    
+    [data-theme="dark"] .tabs {
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 0.7rem 0;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 7px;
+      color: var(--gray-600);
+      transition: all 0.2s;
+    }
+    
+    [data-theme="dark"] .tab {
+      color: var(--gray-400);
+    }
+    
+    .tab.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    [data-theme="dark"] .tab.active {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .dropzone {
+      border: 2px dashed var(--gray-300);
+      padding: 2rem 1rem;
+      margin-top: 1.25rem;
+      text-align: center;
+      color: var(--gray-500);
+      border-radius: var(--card-border-radius);
+      transition: all 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    [data-theme="dark"] .dropzone {
+      border-color: rgba(255,255,255,0.1);
+    }
+    
+    .dropzone:hover {
+      border-color: var(--primary);
+      background: rgba(139, 92, 246, 0.05);
+    }
+    
+    .dropzone i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+    
+    .dropzone p {
+      margin: 0.5rem 0 0;
+    }
+    
+    .insights {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(250, 204, 21, 0.1);
+      border-left: 5px solid #facc15;
+      border-radius: var(--card-border-radius);
+      font-weight: 500;
+      font-size: 1.05rem;
+      color: var(--gray-800);
+    }
+    
+    [data-theme="dark"] .insights {
+      background: rgba(250, 204, 21, 0.05);
+      color: var(--gray-200);
+    }
+    
+    .insights.high {
+      background: rgba(239, 68, 68, 0.1);
+      border-left-color: var(--danger);
+    }
+    
+    .insights.medium {
+      background: rgba(245, 158, 11, 0.1);
+      border-left-color: var(--warning);
+    }
+    
+    .insights.low {
+      background: rgba(16, 185, 129, 0.1);
+      border-left-color: var(--success);
+    }
+    
+    .custom-gpu-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    
+    .custom-gpu-row input {
+      flex: 1;
+    }
+    
+    .custom-gpu-row button {
+      background: var(--gray-100);
+      border: 1px solid var(--gray-300);
+      color: var(--gray-700);
+      font-weight: 600;
+      padding: 0 1rem;
+      border-radius: var(--button-border-radius);
+      cursor: pointer;
+    }
+    
+    [data-theme="dark"] .custom-gpu-row button {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
+      color: white;
+    }
+    
+    .footer {
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 0.95rem;
+      margin: 4rem 0 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--gray-200);
+    }
+    
+    [data-theme="dark"] .footer {
+      border-color: rgba(255,255,255,0.05);
+    }
+    
+    .job-list {
+      margin-top: 1.5rem;
+      overflow: auto;
+      max-height: 400px;
+    }
+    
+    .job-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: var(--gray-50);
+      border-radius: var(--button-border-radius);
+      margin-bottom: 0.7rem;
+      border: 1px solid var(--gray-200);
+      transition: all 0.2s;
+    }
+    
+    [data-theme="dark"] .job-item {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.05);
+    }
+    
+    .job-item:hover {
+      background: var(--gray-100);
+      transform: translateX(2px);
+    }
+    
+    [data-theme="dark"] .job-item:hover {
+      background: rgba(255,255,255,0.07);
+    }
+    
+    .job-info {
+      flex: 1;
+    }
+    
+    .job-title {
+      font-weight: 600;
+      color: var(--gray-800);
+      margin-bottom: 0.3rem;
+    }
+    
+    [data-theme="dark"] .job-title {
+      color: white;
+    }
+    
+    .job-details {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+    }
+    
+    .job-cost {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+    
+    .job-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: 1rem;
+    }
+    
+    .job-actions button {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      color: var(--gray-400);
+      transition: all 0.2s;
+      padding: 0.3rem;
+      border-radius: 4px;
+    }
+    
+    .job-actions button:hover {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+    
+    .preset-gpus {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    
+    .preset-gpu {
+      padding: 0.75rem 0.5rem;
+      text-align: center;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--button-border-radius);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    [data-theme="dark"] .preset-gpu {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.05);
+    }
+    
+    .preset-gpu:hover {
+      background: var(--gray-100);
+      border-color: var(--primary);
+    }
+    
+    [data-theme="dark"] .preset-gpu:hover {
+      background: rgba(255,255,255,0.07);
+    }
+    
+    .preset-gpu.selected {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    [data-theme="dark"] .preset-gpu.selected {
+      background: rgba(139, 92, 246, 0.2);
+    }
+    
+    .preset-gpu strong {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+    
+    .preset-gpu span {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    
+    [data-theme="dark"] .comparison-table th,
+    [data-theme="dark"] .comparison-table td {
+      border-color: rgba(255,255,255,0.05);
+    }
+    
+    .comparison-table th {
+      font-weight: 600;
+      color: var(--gray-700);
+      background: var(--gray-50);
+    }
+    
+    [data-theme="dark"] .comparison-table th {
+      background: rgba(255,255,255,0.03);
+      color: var(--gray-300);
+    }
+    
+    .comparison-table td {
+      color: var(--gray-700);
+    }
+    
+    [data-theme="dark"] .comparison-table td {
+      color: var(--gray-300);
+    }
+    
+    .comparison-table .savings {
+      font-weight: 600;
+      color: var(--success);
+    }
+    
+    .chip {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      font-weight: 600;
+      background: var(--gray-100);
+      color: var(--gray-600);
+      margin-right: 0.5rem;
+    }
+    
+    [data-theme="dark"] .chip {
+      background: rgba(255,255,255,0.07);
+      color: var(--gray-300);
+    }
+    
+    .chip.nvidia {
+      background: rgba(118, 185, 0, 0.1);
+      color: #76b900;
+    }
+    
+    .chip.amd {
+      background: rgba(237, 28, 36, 0.1);
+      color: #ed1c24;
+    }
+    
+    .optimization-card {
+      padding: 1.5rem;
+      background: white;
+      border-radius: var(--card-border-radius);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      margin-top: 1.5rem;
+      border: 1px solid var(--gray-100);
+    }
+    
+    [data-theme="dark"] .optimization-card {
+      background: var(--bg-card-dark);
+      border-color: rgba(255,255,255,0.05);
+    }
+    
+    .optimization-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--gray-800);
+      margin-bottom: 1rem;
+    }
+    
+    [data-theme="dark"] .optimization-card h3 {
+      color: white;
+    }
+    
+    .optimization-card h3 i {
+      color: var(--primary);
+    }
+    
+    .optimization-card p {
+      color: var(--gray-600);
+      line-height: 1.6;
+    }
+    
+    [data-theme="dark"] .optimization-card p {
+      color: var(--gray-300);
+    }
+    
+    .optimization-savings {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-100);
+    }
+    
+    [data-theme="dark"] .optimization-savings {
+      border-color: rgba(255,255,255,0.05);
+    }
+    
+    .optimization-savings .label {
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+    
+    [data-theme="dark"] .optimization-savings .label {
+      color: var(--gray-300);
+    }
+    
+    .optimization-savings .value {
+      font-weight: 700;
+      color: var(--success);
+      font-size: 1.1rem;
+    }
+    
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .sparkbar {
+      height: 30px;
+      width: 100%;
+      background: rgba(139, 92, 246, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 1rem;
+    }
+    
+    .sparkbar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.5s ease-out;
+    }
+    
+    .sparkbar-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 600;
+      color: var(--gray-700);
+      font-size: 0.9rem;
+      text-shadow: 0 0 5px rgba(255,255,255,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i> Toggle Theme</div>
+  <header>
+    <h1>AI Compute Cost Dashboard</h1>
+    <p>Smart analytics for GPU usage, cost optimization, and budget forecasting</p>
+    <div class="actions">
+      <button onclick="calculate()"><i class="fas fa-calculator"></i> Calculate</button>
+      <button onclick="copyLink()"><i class="fas fa-link"></i> Copy Link</button>
+      <button onclick="exportReport()"><i class="fas fa-file-export"></i> Export Report</button>
+      <button onclick="showOptimizationReport()"><i class="fas fa-bolt"></i> Optimization Tips</button>
+    </div>
+  </header>
+
+  <div class="dashboard">
+    <div class="card card-purple">
+      <div class="card-icon"><i class="fas fa-microchip"></i></div>
+      <h2 id="gpuCount">0</h2>
+      <small>GPUs in Use</small>
+    </div>
+    <div class="card card-blue">
+      <div class="card-icon"><i class="fas fa-tasks"></i></div>
+      <h2 id="jobCount">0</h2>
+      <small>Active Jobs</small>
+    </div>
+    <div class="card card-green">
+      <div class="card-icon"><i class="fas fa-dollar-sign"></i></div>
+      <h2 id="totalCost">$0.00</h2>
+      <small>Total Cost</small>
+    </div>
+    <div class="card card-orange">
+      <div class="card-icon"><i class="fas fa-tachometer-alt"></i></div>
+      <h2 id="efficiency">0%</h2>
+      <small>Efficiency Score</small>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="content-wrapper">
+      <div class="input-group">
+        <h2>Configure Compute Jobs</h2>
+        
+        <div class="tabs">
+          <div class="tab active" data-tab="simple">Simple</div>
+          <div class="tab" data-tab="advanced">Advanced</div>
+          <div class="tab" data-tab="batch">Batch Jobs</div>
+        </div>
+        
+        <div class="tab-content active" id="simple-tab">
+          <label>GPU Selection</label>
+          <div class="preset-gpus">
+            <div class="preset-gpu selected" data-value="A100-1.5">
+              <strong>A100</strong>
+              <span>$1.50/hr</span>
+            </div>
+            <div class="preset-gpu" data-value="H100-2.5">
+              <strong>H100</strong>
+              <span>$2.50/hr</span>
+            </div>
+            <div class="preset-gpu" data-value="T4-0.35">
+              <strong>T4</strong>
+              <span>$0.35/hr</span>
+            </div>
+            <div class="preset-gpu" data-value="V100-0.9">
+              <strong>V100</strong>
+              <span>$0.90/hr</span>
+            </div>
+            <div class="preset-gpu" data-value="P100-0.65">
+              <strong>P100</strong>
+              <span>$0.65/hr</span>
+            </div>
+            <div class="preset-gpu" data-value="custom">
+              <strong>Custom</strong>
+              <span>Define</span>
+            </div>
+          </div>
+          
+          <div id="customRateDiv" style="display:none;">
+            <div class="custom-gpu-row">
+              <input type="text" id="customGpuName" placeholder="GPU Name">
+              <input type="number" id="rate" step="0.01" placeholder="$/hour">
+              <button onclick="addCustomGpu()"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+          
+          <label>Training Duration (hours)</label>
+          <input type="number" id="hours" value="24" min="0" step="0.5">
+          
+          <label>Number of GPUs</label>
+          <input type="number" id="gpus" value="4" min="1">
+          
+          <div class="sparkbar">
+            <div class="sparkbar-fill" style="width: 0%"></div>
+            <div class="sparkbar-label">Estimated Cost: $0.00</div>
+          </div>
+          
+          <button class="action" onclick="addJob()"><i class="fas fa-plus"></i> Add Training Job</button>
+        </div>
+        
+        <div class="tab-content" id="advanced-tab">
+          <label>GPU Type</label>
+          <select id="gpu" onchange="updateRate()">
+            <option value="A100-1.5">NVIDIA A100 ($1.50/hr)</option>
+            <option value="H100-2.5">NVIDIA H100 ($2.50/hr)</option>
+            <option value="T4-0.35">NVIDIA T4 ($0.35/hr)</option>
+            <option value="V100-0.9">NVIDIA V100 ($0.90/hr)</option>
+            <option value="P100-0.65">NVIDIA P100 ($0.65/hr)</option>
+            <option value="A6000-1.1">NVIDIA A6000 ($1.10/hr)</option>
+            <option value="L4-0.5">NVIDIA L4 ($0.50/hr)</option>
+            <option value="MI250-1.8">AMD MI250 ($1.80/hr)</option>
+            <option value="MI100-1.2">AMD MI100 ($1.20/hr)</option>
+            <option value="custom">Custom Rate</option>
+          </select>
+          
+          <div id="advancedCustomRateDiv" style="display:none;">
+            <label>Custom Rate ($/hr)</label>
+            <input type="number" id="advancedRate" step="0.01">
+          </div>
+          
+          <label>Training Hours</label>
+          <input type="number" id="advancedHours" value="24" min="0" step="0.5">
+          
+          <label>GPU Count</label>
+          <input type="number" id="advancedGpus" value="4" min="1">
+          
+          <label>Memory Per GPU (GB)</label>
+          <input type="number" id="gpuMemory" value="40" min="1">
+          
+          <label>Utilization Factor (%)</label>
+          <input type="range" id="utilization" min="50" max="100" value="85" oninput="updateUtilizationLabel()">
+          <div id="utilizationLabel" style="text-align: right; color: var(--gray-500); margin-top: 4px;">85%</div>
+          
+          <button class="action" onclick="addAdvancedJob()"><i class="fas fa-cogs"></i> Add Advanced Job</button>
+        </div>
+        
+        <div class="tab-content" id="batch-tab">
+          <label>Batch Jobs Configuration <small>(hours,gpus,gpu_type per line)</small></label>
+          <textarea id="batch" rows="6" placeholder="24,4,A100-1.5&#10;48,8,H100-2.5&#10;168,2,T4-0.35"></textarea>
+          
+          <div class="dropzone" ondrop="handleDrop(event)" ondragover="event.preventDefault()">
+            <i class="fas fa-file-import"></i>
+            <div>Drop CSV/JSON file here</div>
+            <p>Format: hours, gpus, gpu_type (optional), price (optional)</p>
+          </div>
+          
+          <button class="action" onclick="processBatch()"><i class="fas fa-file-import"></i> Process Batch Jobs</button>
+        </div>
+      </div>
+      
+      <div class="input-group">
+        <h2>Job Summary</h2>
+        
+        <div class="job-list" id="jobList">
+          <div style="text-align: center; color: var(--gray-500); padding: 2rem;">
+            No jobs added yet. Add your first job to get started.
+          </div>
+        </div>
+        
+        <div class="insights" id="insights">
+          AI Insight: Add some jobs to get optimization recommendations.
+        </div>
+        
+        <canvas id="costChart" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>⚡ AI Compute Cost Dashboard Pro ⚡</div>
+    <div style="margin-top: 0.5rem;">Built with <i class="fas fa-heart" style="color: var(--accent);"></i> for Alberta — 100% client-side, AI-ready ☁️</div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <script>
+    // State management
+    let jobs = [];
+    let customGpus = [];
+    let chartInstance = null;
+    let selectedGpu = "A100-1.5";
+    
+    // Elements
+    const gpuCountEl = document.getElementById("gpuCount");
+    const jobCountEl = document.getElementById("jobCount");
+    const totalCostEl = document.getElementById("totalCost");
+    const efficiencyEl = document.getElementById("efficiency");
+    const insightsEl = document.getElementById("insights");
+    const jobListEl = document.getElementById("jobList");
+    const batchEl = document.getElementById("batch");
+    const hoursEl = document.getElementById("hours");
+    const gpusEl = document.getElementById("gpus");
+    const rateEl = document.getElementById("rate");
+    const customRateDivEl = document.getElementById("customRateDiv");
+    const customGpuNameEl = document.getElementById("customGpuName");
+    const sparkbarFillEl = document.querySelector(".sparkbar-fill");
+    const sparkbarLabelEl = document.querySelector(".sparkbar-label");
+    const utilizationLabelEl = document.getElementById("utilizationLabel");
+    
+    // Initialize
+    window.onload = () => {
+      initTabs();
+      initPresetGpus();
+      loadSavedJobs();
+      applySavedTheme();
+      updateSparkBar();
+      renderChart();
+    };
+    
+    function initTabs() {
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active class from all tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          tab.classList.add('active');
+          
+          // Hide all tab content
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+          });
+          
+          // Show corresponding tab content
+          const tabName = tab.getAttribute('data-tab');
+          document.getElementById(`${tabName}-tab`).classList.add('active');
+        });
+      });
+    }
+    
+    function initPresetGpus() {
+      const presets = document.querySelectorAll('.preset-gpu');
+      presets.forEach(preset => {
+        preset.addEventListener('click', () => {
+          // Remove selected class from all presets
+          presets.forEach(p => p.classList.remove('selected'));
+          
+          // Add selected class to clicked preset
+          preset.classList.add('selected');
+          
+          // Set selected GPU
+          selectedGpu = preset.getAttribute('data-value');
+          
+          // Show custom rate input if custom GPU is selected
+          if (selectedGpu === 'custom') {
+            customRateDivEl.style.display = 'block';
+          } else {
+            customRateDivEl.style.display = 'none';
+          }
+          
+          updateSparkBar();
+        });
+      });
+    }
+    
+    function loadSavedJobs() {
+      const savedJobs = localStorage.getItem('aiDashboardJobs');
+      if (savedJobs) {
+        jobs = JSON.parse(savedJobs);
+        renderJobs();
+        updateDashboard();
+      }
+      
+      const savedBatch = localStorage.getItem('aiDashboardBatch');
+      if (savedBatch) {
+        batchEl.value = savedBatch;
+      }
+      
+      const savedCustomGpus = localStorage.getItem('aiDashboardCustomGpus');
+      if (savedCustomGpus) {
+        customGpus = JSON.parse(savedCustomGpus);
+      }
+    }
+    
+    function saveState() {
+      localStorage.setItem('aiDashboardJobs', JSON.stringify(jobs));
+      localStorage.setItem('aiDashboardBatch', batchEl.value);
+      localStorage.setItem('aiDashboardCustomGpus', JSON.stringify(customGpus));
+    }
+    
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+      
+      // Update icon
+      const icon = document.querySelector(".theme-toggle i");
+      icon.className = next === "dark" ? "fas fa-sun" : "fas fa-moon";
+      
+      // Redraw chart if it exists
+      if (chartInstance) {
+        renderChart();
+      }
+    }
+    
+    function applySavedTheme() {
+      const saved = localStorage.getItem("theme");
+      if (saved) {
+        document.documentElement.setAttribute("data-theme", saved);
+        // Update icon
+        const icon = document.querySelector(".theme-toggle i");
+        icon.className = saved === "dark" ? "fas fa-sun" : "fas fa-moon";
+      }
+    }
+    
+    function updateRate() {
+      const gpuSelect = document.getElementById("gpu");
+      const advancedRateDiv = document.getElementById("advancedCustomRateDiv");
+      const advancedRate = document.getElementById("advancedRate");
+      
+      if (gpuSelect.value === "custom") {
+        advancedRateDiv.style.display = "block";
+      } else {
+        advancedRateDiv.style.display = "none";
+        const rate = parseFloat(gpuSelect.value.split("-")[1]);
+        advancedRate.value = rate;
+      }
+    }
+    
+    function updateUtilizationLabel() {
+      const utilization = document.getElementById("utilization").value;
+      utilizationLabelEl.textContent = `${utilization}%`;
+    }
+    
+    function parseGpuValue(gpuValue) {
+      const parts = gpuValue.split('-');
+      return {
+        name: parts[0],
+        rate: parseFloat(parts[1])
+      };
+    }
+    
+    function addCustomGpu() {
+      const name = customGpuNameEl.value.trim();
+      const rate = parseFloat(rateEl.value);
+      
+      if (!name || isNaN(rate)) {
+        alert("Please enter both a GPU name and a valid hourly rate.");
+        return;
+      }
+      
+      // Create new GPU value
+      const gpuValue = `${name}-${rate}`;
+      
+      // Add to custom GPUs array
+      customGpus.push(gpuValue);
+      
+      // Create a new preset element
+      const presetGpus = document.querySelector('.preset-gpus');
+      const newPreset = document.createElement('div');
+      newPreset.className = 'preset-gpu';
+      newPreset.setAttribute('data-value', gpuValue);
+      newPreset.innerHTML = `
+        <strong>${name}</strong>
+        <span>$${rate.toFixed(2)}/hr</span>
+      `;
+      
+      // Insert before custom option
+      const customOption = document.querySelector('.preset-gpu[data-value="custom"]');
+      presetGpus.insertBefore(newPreset, customOption);
+      
+      // Add event listener
+      newPreset.addEventListener('click', () => {
+        document.querySelectorAll('.preset-gpu').forEach(p => p.classList.remove('selected'));
+        newPreset.classList.add('selected');
+        selectedGpu = gpuValue;
+        customRateDivEl.style.display = 'none';
+        updateSparkBar();
+      });
+      
+      // Also add to advanced dropdown
+      const gpuSelect = document.getElementById("gpu");
+      const option = document.createElement('option');
+      option.value = gpuValue;
+      option.textContent = `${name} ($${rate.toFixed(2)}/hr)`;
+      
+      // Insert before custom option
+      const customSelectOption = Array.from(gpuSelect.options).find(opt => opt.value === 'custom');
+      gpuSelect.insertBefore(option, customSelectOption);
+      
+      // Clear inputs
+      customGpuNameEl.value = '';
+      rateEl.value = '';
+      
+      // Save custom GPUs
+      saveState();
+      
+      // Select the new GPU
+      newPreset.click();
+    }
+    
+    function updateSparkBar() {
+      let hours, gpus, rate;
+      
+      if (selectedGpu === 'custom') {
+        hours = parseFloat(hoursEl.value) || 0;
+        gpus = parseInt(gpusEl.value) || 0;
+        rate = parseFloat(rateEl.value) || 0;
+      } else {
+        hours = parseFloat(hoursEl.value) || 0;
+        gpus = parseInt(gpusEl.value) || 0;
+        rate = parseGpuValue(selectedGpu).rate;
+      }
+      
+      const cost = hours * gpus * rate;
+      
+      // Set a maximum expected cost for the bar (adjust as needed)
+      const maxCost = 10000;
+      const percentage = Math.min((cost / maxCost) * 100, 100);
+      
+      sparkbarFillEl.style.width = `${percentage}%`;
+      sparkbarLabelEl.textContent = `Estimated Cost: $${cost.toFixed(2)}`;
+    }
+    
+    function generateJobId() {
+      return 'job_' + Math.random().toString(36).substr(2, 9);
+    }
+    
+    function addJob() {
+      let gpu, rate, hours, gpus;
+      
+      if (selectedGpu === 'custom') {
+        const customName = customGpuNameEl.value.trim() || 'Custom';
+        rate = parseFloat(rateEl.value);
+        gpu = `${customName}-${rate}`;
+      } else {
+        gpu = selectedGpu;
+        const gpuInfo = parseGpuValue(gpu);
+        rate = gpuInfo.rate;
+      }
+      
+      hours = parseFloat(hoursEl.value);
+      gpus = parseInt(gpusEl.value);
+      
+      if (isNaN(hours) || isNaN(gpus) || isNaN(rate)) {
+        alert("Please fill in all fields with valid numbers.");
+        return;
+      }
+      
+      const cost = hours * gpus * rate;
+      const gpuName = gpu.split('-')[0];
+      
+      const job = {
+        id: generateJobId(),
+        gpu: gpuName,
+        hours,
+        gpus,
+        rate,
+        cost,
+        timestamp: new Date().toISOString()
+      };
+      
+      jobs.push(job);
+      renderJobs();
+      updateDashboard();
+      saveState();
+      
+      // Reset form
+      hoursEl.value = "24";
+      gpusEl.value = "4";
+    }
+    
+    function addAdvancedJob() {
+      const gpuSelect = document.getElementById("gpu");
+      const advancedHours = document.getElementById("advancedHours");
+      const advancedGpus = document.getElementById("advancedGpus");
+      const advancedRate = document.getElementById("advancedRate");
+      const gpuMemory = document.getElementById("gpuMemory");
+      const utilization = document.getElementById("utilization");
+      
+      let gpuValue = gpuSelect.value;
+      let rate;
+      
+      if (gpuValue === 'custom') {
+        rate = parseFloat(advancedRate.value);
+        gpuValue = `Custom-${rate}`;
+      } else {
+        rate = parseFloat(gpuValue.split('-')[1]);
+      }
+      
+      const hours = parseFloat(advancedHours.value);
+      const gpus = parseInt(advancedGpus.value);
+      const memory = parseInt(gpuMemory.value);
+      const util = parseInt(utilization.value) / 100;
+      
+      if (isNaN(hours) || isNaN(gpus) || isNaN(rate) || isNaN(memory) || isNaN(util)) {
+        alert("Please fill in all fields with valid numbers.");
+        return;
+      }
+      
+      // Adjust cost based on utilization
+      const cost = hours * gpus * rate * util;
+      const gpuName = gpuValue.split('-')[0];
+      
+      const job = {
+        id: generateJobId(),
+        gpu: gpuName,
+        hours,
+        gpus,
+        rate,
+        cost,
+        memory,
+        utilization: util,
+        timestamp: new Date().toISOString(),
+        isAdvanced: true
+      };
+      
+      jobs.push(job);
+      renderJobs();
+      updateDashboard();
+      saveState();
+      
+      // Reset form
+      advancedHours.value = "24";
+      advancedGpus.value = "4";
+      gpuMemory.value = "40";
+      utilization.value = "85";
+      updateUtilizationLabel();
+    }
+    
+    function processBatch() {
+      const batchText = batchEl.value.trim();
+      if (!batchText) {
+        alert("Please enter batch job data.");
+        return;
+      }
+      
+      const lines = batchText.split('\n');
+      let jobsAdded = 0;
+      
+      lines.forEach(line => {
+        if (!line.trim()) return;
+        
+        const parts = line.split(',').map(part => part.trim());
+        
+        if (parts.length < 2) return;
+        
+        const hours = parseFloat(parts[0]);
+        const gpus = parseInt(parts[1]);
+        
+        let gpuInfo, rate;
+        
+        if (parts.length >= 3) {
+          const gpuPart = parts[2];
+          if (gpuPart.includes('-')) {
+            gpuInfo = parseGpuValue(gpuPart);
+          } else {
+            // Try to find matching GPU from our list
+            const standardGpus = {
+              'A100': 1.5,
+              'H100': 2.5,
+              'T4': 0.35,
+              'V100': 0.9,
+              'P100': 0.65
+            };
+            
+            rate = standardGpus[gpuPart] || 1.0;
+            gpuInfo = { name: gpuPart, rate };
+          }
+        } else {
+          // Default to A100 if not specified
+          gpuInfo = { name: 'A100', rate: 1.5 };
+        }
+        
+        // Allow explicit rate in 4th column
+        if (parts.length >= 4) {
+          const explicitRate = parseFloat(parts[3]);
+          if (!isNaN(explicitRate)) {
+            gpuInfo.rate = explicitRate;
+          }
+        }
+        
+        if (isNaN(hours) || isNaN(gpus) || isNaN(gpuInfo.rate)) return;
+        
+        const cost = hours * gpus * gpuInfo.rate;
+        
+        const job = {
+          id: generateJobId(),
+          gpu: gpuInfo.name,
+          hours,
+          gpus,
+          rate: gpuInfo.rate,
+          cost,
+          timestamp: new Date().toISOString()
+        };
+        
+        jobs.push(job);
+        jobsAdded++;
+      });
+      
+      if (jobsAdded > 0) {
+        renderJobs();
+        updateDashboard();
+        saveState();
+        alert(`Successfully added ${jobsAdded} jobs.`);
+      } else {
+        alert("No valid jobs found. Please check your format.");
+      }
+    }
+    
+    function renderJobs() {
+      if (jobs.length === 0) {
+        jobListEl.innerHTML = `
+          <div style="text-align: center; color: var(--gray-500); padding: 2rem;">
+            No jobs added yet. Add your first job to get started.
+          </div>
+        `;
+        return;
+      }
+      
+      // Sort jobs by timestamp (newest first)
+      const sortedJobs = [...jobs].sort((a, b) => 
+        new Date(b.timestamp) - new Date(a.timestamp)
+      );
+      
+      jobListEl.innerHTML = sortedJobs.map(job => {
+        const gpuClass = job.gpu.toLowerCase().includes('nvidia') ? 'nvidia' : 
+                          job.gpu.toLowerCase().includes('amd') ? 'amd' : '';
+        
+        return `
+          <div class="job-item" data-id="${job.id}">
+            <div class="job-info">
+              <div class="job-title">
+                <span class="chip ${gpuClass}">${job.gpu}</span>
+                ${job.gpus}x GPU${job.gpus > 1 ? 's' : ''} for ${job.hours}h
+              </div>
+              <div class="job-details">
+                $${job.rate.toFixed(2)}/hr per GPU
+                ${job.utilization ? ` • ${Math.round(job.utilization * 100)}% utilization` : ''}
+                ${job.memory ? ` • ${job.memory}GB memory` : ''}
+              </div>
+            </div>
+            <div class="job-cost">$${job.cost.toFixed(2)}</div>
+            <div class="job-actions">
+              <button onclick="removeJob('${job.id}')">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      renderChart();
+    }
+    
+    function removeJob(jobId) {
+      jobs = jobs.filter(job => job.id !== jobId);
+      renderJobs();
+      updateDashboard();
+      saveState();
+    }
+    
+    function updateDashboard() {
+      if (jobs.length === 0) {
+        gpuCountEl.textContent = "0";
+        jobCountEl.textContent = "0";
+        totalCostEl.textContent = "$0.00";
+        efficiencyEl.textContent = "0%";
+        insightsEl.textContent = "AI Insight: Add some jobs to get optimization recommendations.";
+        insightsEl.className = "insights";
+        return;
+      }
+      
+      // Count unique GPUs
+      const uniqueGpus = new Set(jobs.map(job => job.gpu)).size;
+      gpuCountEl.textContent = uniqueGpus;
+      
+      // Count jobs
+      jobCountEl.textContent = jobs.length;
+      
+      // Calculate total cost
+      const totalCost = jobs.reduce((sum, job) => sum + job.cost, 0);
+      totalCostEl.textContent = `$${totalCost.toFixed(2)}`;
+      
+      // Calculate efficiency score
+      let efficiency = 85; // Base score
+      
+      // Adjust based on GPU selection
+      if (uniqueGpus > 1) {
+        efficiency += 5; // Mixed GPU types can be more efficient
+      }
+      
+      // Adjust based on job size
+      const jobSizes = jobs.map(job => job.cost);
+      const variance = calculateVariance(jobSizes);
+      if (variance > 1000000) {
+        efficiency -= 10; // High variance means some jobs might be too big
+      }
+      
+      // Adjust based on total cost
+      if (totalCost > 5000) {
+        efficiency -= 15;
+      } else if (totalCost < 1000) {
+        efficiency += 5;
+      }
+      
+      // Cap between 0-100
+      efficiency = Math.max(0, Math.min(100, efficiency));
+      efficiencyEl.textContent = `${Math.round(efficiency)}%`;
+      
+      // Update insights
+      updateInsights(totalCost, efficiency, uniqueGpus);
+    }
+    
+    function calculateVariance(arr) {
+      const mean = arr.reduce((sum, val) => sum + val, 0) / arr.length;
+      return arr.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / arr.length;
+    }
+    
+    function updateInsights(totalCost, efficiency, uniqueGpus) {
+      let insightText = "";
+      let insightClass = "insights";
+      
+      if (totalCost > 5000) {
+        insightText = "💡 High compute cost detected. Consider adjusting your GPU selection or exploring spot instances for non-critical jobs.";
+        insightClass = "insights high";
+      } else if (totalCost > 2000) {
+        insightText = "⚙️ Moderate compute usage observed. You might reduce cost with mixed precision training or resource consolidation during off-peak hours.";
+        insightClass = "insights medium";
+      } else {
+        insightText = "🟢 Healthy compute usage pattern. Your current configuration is cost-effective. Consider pre-emptible instances for even more savings.";
+        insightClass = "insights low";
+      }
+      
+      if (uniqueGpus === 1 && jobs.length > 3) {
+        insightText += " Using multiple GPU types could improve your cost-efficiency ratio.";
+      }
+      
+      if (efficiency < 70) {
+        insightText += " Click 'Optimization Tips' for detailed recommendations on improving your efficiency score.";
+      }
+      
+      insightsEl.textContent = insightText;
+      insightsEl.className = insightClass;
+    }
+    
+    function renderChart() {
+      const ctx = document.getElementById("costChart").getContext("2d");
+      
+      // Destroy previous chart instance if it exists
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+      
+      if (jobs.length === 0) {
+        return;
+      }
+      
+      // Prepare data grouped by GPU type
+      const gpuTypes = {};
+      
+      jobs.forEach(job => {
+        if (!gpuTypes[job.gpu]) {
+          gpuTypes[job.gpu] = 0;
+        }
+        gpuTypes[job.gpu] += job.cost;
+      });
+      
+      // Sort by cost (descending)
+      const sortedData = Object.entries(gpuTypes)
+        .sort((a, b) => b[1] - a[1])
+        .reduce((obj, [key, value]) => {
+          obj.labels.push(key);
+          obj.values.push(value);
+          return obj;
+        }, { labels: [], values: [] });
+      
+      // Generate colors
+      const colors = [
+        'rgba(139, 92, 246, 0.7)',
+        'rgba(79, 70, 229, 0.7)',
+        'rgba(16, 185, 129, 0.7)',
+        'rgba(245, 158, 11, 0.7)',
+        'rgba(236, 72, 153, 0.7)',
+        'rgba(37, 99, 235, 0.7)',
+        'rgba(234, 88, 12, 0.7)',
+        'rgba(107, 114, 128, 0.7)'
+      ];
+      
+      // Create chart
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: sortedData.labels,
+          datasets: [{
+            label: 'Cost by GPU Type ($)',
+            data: sortedData.values,
+            backgroundColor: colors.slice(0, sortedData.labels.length),
+            borderColor: colors.slice(0, sortedData.labels.length).map(c => c.replace('0.7', '1')),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.dataset.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  if (context.parsed.y !== null) {
+                    label += new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: 'USD'
+                    }).format(context.parsed.y);
+                  }
+                  return label;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return '$' + value.toFixed(0);
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    function calculate() {
+      updateDashboard();
+      renderChart();
+    }
+    
+    function copyLink() {
+      const url = new URL(location.href);
+      url.searchParams.set("jobs", JSON.stringify(jobs));
+      
+      navigator.clipboard.writeText(url.toString())
+        .then(() => {
+          alert("Shareable link copied to clipboard!");
+        })
+        .catch(err => {
+          console.error('Error copying link: ', err);
+          alert("Failed to copy link. Please try again.");
+        });
+    }
+    
+    function exportReport() {
+      if (jobs.length === 0) {
+        alert("No jobs to export. Please add jobs first.");
+        return;
+      }
+      
+      const totalCost = jobs.reduce((sum, job) => sum + job.cost, 0);
+      
+      let report = `# AI Compute Cost Report\n\n`;
+      report += `Generated: ${new Date().toLocaleString()}\n\n`;
+      report += `## Summary\n\n`;
+      report += `* Total Cost: $${totalCost.toFixed(2)}\n`;
+      report += `* Total Jobs: ${jobs.length}\n`;
+      report += `* Unique GPU Types: ${new Set(jobs.map(job => job.gpu)).size}\n`;
+      report += `* Efficiency Score: ${efficiencyEl.textContent}\n\n`;
+      
+      report += `## Jobs\n\n`;
+      jobs.forEach((job, i) => {
+        report += `### Job ${i+1}\n`;
+        report += `* GPU Type: ${job.gpu}\n`;
+        report += `* GPUs: ${job.gpus}\n`;
+        report += `* Hours: ${job.hours}\n`;
+        report += `* Rate: $${job.rate.toFixed(2)}/hr\n`;
+        if (job.utilization) {
+          report += `* Utilization: ${Math.round(job.utilization * 100)}%\n`;
+        }
+        if (job.memory) {
+          report += `* Memory: ${job.memory}GB\n`;
+        }
+        report += `* Total Cost: $${job.cost.toFixed(2)}\n\n`;
+      });
+      
+      report += `## Insights\n\n${insightsEl.textContent}\n\n`;
+      report += `---\nGenerated by AI Compute Cost Dashboard Pro`;
+      
+      const blob = new Blob([report], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "ai-compute-cost-report.md";
+      link.click();
+    }
+    
+    function showOptimizationReport() {
+      if (jobs.length === 0) {
+        alert("No jobs to optimize. Please add jobs first.");
+        return;
+      }
+      
+      // Create a modal popup
+      const modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100%';
+      modal.style.height = '100%';
+      modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+      modal.style.display = 'flex';
+      modal.style.justifyContent = 'center';
+      modal.style.alignItems = 'center';
+      modal.style.zIndex = '1000';
+      modal.style.padding = '20px';
+      modal.style.overflow = 'auto';
+      
+      // Create content container
+      const container = document.createElement('div');
+      container.style.backgroundColor = 'var(--bg-light)';
+      container.style.borderRadius = '16px';
+      container.style.maxWidth = '800px';
+      container.style.width = '100%';
+      container.style.maxHeight = '90vh';
+      container.style.overflowY = 'auto';
+      container.style.padding = '2rem';
+      container.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.1)';
+      container.style.position = 'relative';
+      
+      // Add close button
+      const closeBtn = document.createElement('button');
+      closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+      closeBtn.style.position = 'absolute';
+      closeBtn.style.top = '1rem';
+      closeBtn.style.right = '1rem';
+      closeBtn.style.background = 'none';
+      closeBtn.style.border = 'none';
+      closeBtn.style.fontSize = '1.5rem';
+      closeBtn.style.cursor = 'pointer';
+      closeBtn.style.color = 'var(--gray-600)';
+      closeBtn.onclick = () => {
+        document.body.removeChild(modal);
+      };
+      container.appendChild(closeBtn);
+      
+      // Create optimization report content
+      const content = document.createElement('div');
+      
+      // Calculate current total cost
+      const totalCost = jobs.reduce((sum, job) => sum + job.cost, 0);
+      
+      // Generate title
+      const title = document.createElement('h2');
+      title.textContent = 'AI Compute Optimization Report';
+      title.style.marginBottom = '1.5rem';
+      title.style.color = 'var(--primary)';
+      title.style.fontSize = '1.75rem';
+      content.appendChild(title);
+      
+      // Generate summary
+      const summary = document.createElement('p');
+      summary.textContent = `Based on your ${jobs.length} jobs with a total cost of ${totalCost.toFixed(2)}, we've identified several optimization opportunities.`;
+      summary.style.marginBottom = '1.5rem';
+      summary.style.fontSize = '1.1rem';
+      content.appendChild(summary);
+      
+      // Generate optimization cards
+      const optimizations = [];
+      
+      // 1. Spot instance optimization
+      const spotSavings = totalCost * 0.7;
+      optimizations.push({
+        title: 'Spot Instance Savings',
+        icon: 'fa-money-bill-wave',
+        description: 'Using spot/preemptible instances can save up to 70% on non time-critical workloads like experimentation, research, and batch processing.',
+        savings: spotSavings
+      });
+      
+      // 2. Right-sizing optimization
+      let oversizedJobs = 0;
+      jobs.forEach(job => {
+        if (job.gpus > 4 && job.hours < 12) oversizedJobs++;
+      });
+      
+      if (oversizedJobs > 0) {
+        const rightSizingSavings = totalCost * 0.15;
+        optimizations.push({
+          title: 'GPU Right-Sizing',
+          icon: 'fa-ruler',
+          description: `You have ${oversizedJobs} jobs that might be over-provisioned. Consider using fewer GPUs with longer runtime for these jobs.`,
+          savings: rightSizingSavings
+        });
+      }
+      
+      // 3. Mixed precision training
+      if (jobs.some(job => job.gpu.includes('A100') || job.gpu.includes('H100'))) {
+        const precisionSavings = totalCost * 0.2;
+        optimizations.push({
+          title: 'Mixed Precision Training',
+          icon: 'fa-compress-arrows-alt',
+          description: 'Using FP16/BF16 mixed precision can accelerate training by up to 3x on tensor core GPUs, reducing your compute costs.',
+          savings: precisionSavings
+        });
+      }
+      
+      // 4. Resource scheduling
+      if (jobs.length > 3) {
+        const schedulingSavings = totalCost * 0.1;
+        optimizations.push({
+          title: 'Optimal Resource Scheduling',
+          icon: 'fa-calendar-alt',
+          description: 'Batch scheduling and resource sharing across jobs can reduce idle time and improve utilization.',
+          savings: schedulingSavings
+        });
+      }
+      
+      // 5. Storage optimization
+      const storageSavings = totalCost * 0.05;
+      optimizations.push({
+        title: 'Storage Cost Reduction',
+        icon: 'fa-hdd',
+        description: 'Optimize dataset storage with compression, tiered storage, and lifecycle policies to reduce associated storage costs.',
+        savings: storageSavings
+      });
+      
+      // Add optimization cards
+      optimizations.forEach(opt => {
+        const card = document.createElement('div');
+        card.className = 'optimization-card';
+        
+        const header = document.createElement('h3');
+        header.innerHTML = `<i class="fas ${opt.icon}"></i> ${opt.title}`;
+        card.appendChild(header);
+        
+        const desc = document.createElement('p');
+        desc.textContent = opt.description;
+        card.appendChild(desc);
+        
+        const savings = document.createElement('div');
+        savings.className = 'optimization-savings';
+        savings.innerHTML = `
+          <span class="label">Potential Savings:</span>
+          <span class="value">${opt.savings.toFixed(2)}</span>
+        `;
+        card.appendChild(savings);
+        
+        content.appendChild(card);
+      });
+      
+      // Calculate total potential savings
+      const totalSavings = optimizations.reduce((sum, opt) => sum + opt.savings, 0);
+      const savingsPercentage = Math.round((totalSavings / totalCost) * 100);
+      
+      // Add comparison table
+      const tableTitle = document.createElement('h3');
+      tableTitle.textContent = 'Cost Comparison';
+      tableTitle.style.marginTop = '2rem';
+      tableTitle.style.marginBottom = '1rem';
+      content.appendChild(tableTitle);
+      
+      const table = document.createElement('table');
+      table.className = 'comparison-table';
+      table.innerHTML = `
+        <tr>
+          <th>Scenario</th>
+          <th>Total Cost</th>
+          <th>Savings</th>
+        </tr>
+        <tr>
+          <td>Current Configuration</td>
+          <td>${totalCost.toFixed(2)}</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>With All Optimizations</td>
+          <td>${(totalCost - totalSavings).toFixed(2)}</td>
+          <td class="savings">${totalSavings.toFixed(2)} (${savingsPercentage}%)</td>
+        </tr>
+      `;
+      content.appendChild(table);
+      
+      // Add action button
+      const action = document.createElement('button');
+      action.className = 'action';
+      action.innerHTML = '<i class="fas fa-file-download"></i> Export Optimization Report';
+      action.style.marginTop = '2rem';
+      action.onclick = () => {
+        exportOptimizationReport(optimizations, totalCost, totalSavings);
+      };
+      content.appendChild(action);
+      
+      container.appendChild(content);
+      modal.appendChild(container);
+      document.body.appendChild(modal);
+      
+      // Close modal when clicking outside
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal);
+        }
+      });
+    }
+    
+    function exportOptimizationReport(optimizations, currentCost, totalSavings) {
+      const report = `# AI Compute Optimization Report
+
+Generated: ${new Date().toLocaleString()}
+
+## Current Usage Summary
+
+* Total Cost: ${currentCost.toFixed(2)}
+* Total Jobs: ${jobs.length}
+* Unique GPU Types: ${new Set(jobs.map(job => job.gpu)).size}
+
+## Optimization Opportunities
+
+${optimizations.map(opt => `### ${opt.title}
+${opt.description}
+* Potential Savings: ${opt.savings.toFixed(2)}
+`).join('\n')}
+
+## Estimated Outcome
+
+* Current Total Cost: ${currentCost.toFixed(2)}
+* Optimized Cost: ${(currentCost - totalSavings).toFixed(2)}
+* Total Potential Savings: ${totalSavings.toFixed(2)} (${Math.round((totalSavings / currentCost) * 100)}%)
+
+## Implementation Recommendations
+
+1. For non-critical training jobs, use spot/preemptible instances
+2. Implement mixed precision training using frameworks that support it
+3. Consider auto-scaling and batch scheduling to improve resource utilization
+4. Optimize your dataset storage strategy
+5. Evaluate GPU memory requirements to right-size your instances
+
+---
+Generated by AI Compute Cost Dashboard Pro
+`;
+
+      const blob = new Blob([report], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "ai-compute-optimization-report.md";
+      link.click();
+    }
+    
+    function handleDrop(e) {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          let parsedJobs = [];
+          
+          if (file.name.endsWith(".json")) {
+            // Parse JSON
+            const data = JSON.parse(event.target.result);
+            
+            if (Array.isArray(data)) {
+              parsedJobs = data.map(item => {
+                // Check if it's already in our format
+                if (item.gpu && item.hours && item.gpus && item.rate) {
+                  return {
+                    id: generateJobId(),
+                    gpu: item.gpu,
+                    hours: item.hours,
+                    gpus: item.gpus,
+                    rate: item.rate,
+                    cost: item.hours * item.gpus * item.rate,
+                    timestamp: new Date().toISOString()
+                  };
+                } else {
+                  // Try to extract from different formats
+                  const gpu = item.gpu_type || item.gpuType || 'A100';
+                  const hours = parseFloat(item.hours || item.duration || 0);
+                  const gpus = parseInt(item.gpus || item.gpu_count || 1);
+                  const rate = parseFloat(item.rate || item.hourly_rate || 1.5);
+                  
+                  return {
+                    id: generateJobId(),
+                    gpu,
+                    hours,
+                    gpus,
+                    rate,
+                    cost: hours * gpus * rate,
+                    timestamp: new Date().toISOString()
+                  };
+                }
+              });
+            }
+          } else if (file.name.endsWith(".csv")) {
+            // Parse CSV
+            const csvData = Papa.parse(event.target.result, { 
+              header: true,
+              skipEmptyLines: true,
+              dynamicTyping: true
+            });
+            
+            if (csvData.data && csvData.data.length > 0) {
+              parsedJobs = csvData.data.map(row => {
+                // Try to identify columns by name or position
+                const hours = parseFloat(row.hours || row.duration || row[0] || 0);
+                const gpus = parseInt(row.gpus || row.gpu_count || row[1] || 1);
+                const gpu = row.gpu || row.gpu_type || row[2] || 'A100';
+                let rate = parseFloat(row.rate || row.hourly_rate || row[3] || 0);
+                
+                // If rate is not specified, try to infer from GPU type
+                if (rate === 0 || isNaN(rate)) {
+                  const standardRates = {
+                    'A100': 1.5,
+                    'H100': 2.5,
+                    'T4': 0.35,
+                    'V100': 0.9,
+                    'P100': 0.65
+                  };
+                  
+                  // Check if GPU name contains any of our known types
+                  for (const [gpuType, stdRate] of Object.entries(standardRates)) {
+                    if (gpu.includes(gpuType)) {
+                      rate = stdRate;
+                      break;
+                    }
+                  }
+                  
+                  // Default to 1.0 if still not set
+                  if (rate === 0) rate = 1.0;
+                }
+                
+                return {
+                  id: generateJobId(),
+                  gpu,
+                  hours,
+                  gpus,
+                  rate,
+                  cost: hours * gpus * rate,
+                  timestamp: new Date().toISOString()
+                };
+              });
+            }
+          } else {
+            alert("Unsupported file type. Please use CSV or JSON.");
+            return;
+          }
+          
+          // Filter out invalid jobs
+          parsedJobs = parsedJobs.filter(job => 
+            !isNaN(job.hours) && !isNaN(job.gpus) && !isNaN(job.rate) && 
+            job.hours > 0 && job.gpus > 0 && job.rate > 0
+          );
+          
+          if (parsedJobs.length > 0) {
+            jobs = [...jobs, ...parsedJobs];
+            renderJobs();
+            updateDashboard();
+            saveState();
+            alert(`Successfully imported ${parsedJobs.length} jobs.`);
+          } else {
+            alert("No valid jobs found in the file. Please check the format.");
+          }
+        } catch (err) {
+          console.error("Error processing file:", err);
+          alert("Error reading file. Please check the format.");
+        }
+      };
+      
+      if (file.name.endsWith(".json") || file.name.endsWith(".csv")) {
+        reader.readAsText(file);
+      } else {
+        alert("Unsupported file type. Please use CSV or JSON.");
+      }
+    }
+  </script>
+</body>
+</html>
